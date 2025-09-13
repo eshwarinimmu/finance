@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Finance Manager — Dashboard</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --glass-bg: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.12);
+      --accent: linear-gradient(135deg,#7C3AED 0%, #06B6D4 100%);
+    }
+    body{
+      margin:0;
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1000px 500px at 5% 15%, rgba(124,58,237,0.12), transparent 6%),
+                  radial-gradient(900px 450px at 95% 85%, rgba(6,182,212,0.08), transparent 6%),
+                  linear-gradient(180deg, #071226 0%, #041226 100%);
+      color: #E6EEF8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      padding:2.5rem;
+    }
+
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
+      box-shadow: 0 8px 40px rgba(2,6,23,0.6);
+    }
+
+    .muted { color: rgba(230,238,248,0.75); }
+
+    .card-title { font-weight: 600; color: #EAF6FF; }
+
+    canvas { max-width:100%; }
+
+    /* small responsive tweak */
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="max-w-6xl mx-auto">
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold">Student Finance Manager</h1>
+        <p class="muted text-sm">Your demo dashboard — expenses, categories and simple forecasts</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="px-4 py-2 rounded-lg border border-gray-700 muted">Add Expense</a>
+      </div>
+    </header>
+
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="card-title">Monthly Spend</h2>
+          <div class="muted text-sm">auto-updates from backend</div>
+        </div>
+        <canvas id="lineChart" height="140"></canvas>
+      </div>
+
+      <aside class="glass rounded-2xl p-6">
+        <h3 class="card-title mb-3">Spending by Category</h3>
+        <canvas id="pieChart" height="200"></canvas>
+
+        <div class="mt-6">
+          <label class="block text-sm muted">User ID</label>
+          <div class="flex items-center gap-2 mt-2">
+            <input id="dashUserId" value="1" class="w-24 p-2 rounded-lg bg-transparent border border-gray-700" />
+            <button id="reloadBtn" class="px-3 py-2 rounded-lg" style="background: linear-gradient(90deg,#7C3AED,#06B6D4); color:white;">Reload</button>
+          </div>
+        </div>
+
+        <div id="predictionCard" class="mt-6 p-4 rounded-lg bg-gradient-to-br from-white/3 to-transparent border border-white/6">
+          <div class="text-sm muted">Prediction (next month)</div>
+          <div id="predictionValue" class="text-2xl font-semibold mt-1">—</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="mt-6 glass rounded-2xl p-6">
+      <h3 class="card-title mb-4">Recent expenses</h3>
+      <ul id="expensesList" class="divide-y max-h-72 overflow-auto"></ul>
+    </section>
+  </div>
+
+  <!-- app JS will populate charts and list -->
+  <script src="app.js"></script>
+</body>
+</html>
